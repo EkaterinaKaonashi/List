@@ -33,6 +33,7 @@ namespace List
             _tail = null;
         }
 
+
         public LinkedList(int value)
         {
             CreateListWithOneElement(value);
