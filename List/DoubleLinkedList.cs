@@ -451,6 +451,7 @@ namespace List
                 }
                 return current;
             }
+            //
         }
 
         public override bool Equals(object obj)
