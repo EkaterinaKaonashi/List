@@ -125,10 +125,17 @@ namespace List
             }
 
         }
-        public void RemoveLastElement()
+        public void RemoveLastElement(int xElements = 1)
         {
+            DoubleLinkedNode current = GetDoubleNodeByIndex(Length -1 - xElements );
+            DoubleLinkedNode preCur = GetDoubleNodeByIndex(Length - 1  - (xElements +1));
+
+            _tail = current;
+            current.Previous = preCur;
+            Length-=xElements;
+
             //проверка не пустой ли список
-            Length--;
+           
         }
         public void RemoveFirstElement()
         {
@@ -160,7 +167,7 @@ namespace List
         }
         public void RemoveByEndXElements(int xElements)
         {
-            Length -= xElements;
+            RemoveLastElement(xElements);
         }
 
         public void RemoveByStartXElements(int xElements)
@@ -174,6 +181,7 @@ namespace List
 
         public void RemoveByIndexXElements(int index, int xElements)
         {
+            // можно оптимизировать?
             CheckIndex(index);
             if (index + xElements > Length)
             {
@@ -219,27 +227,208 @@ namespace List
         }
         public void Reverse()
         {
-            //DoubleLinkedNode current = _head;
-            //DoubleLinkedNode next = current.Next;
-            //next.Previous = current;
-            //DoubleLinkedNode tmp;
+            DoubleLinkedNode current = _head;
 
-            //while (!(current is null))
-            //{
-            //    tmp = current.Next;
-            //    current.Previous = current.Next;
-            //    current.Next = tmp;
-            //    current = current.Previous;
-            //}
-            //_head = GetDoubleNodeByIndex(0);
-            //_tail = current;
-            //_tail = _head;
+            ////next.Previous = current;
+            DoubleLinkedNode tmp = null;
+
+            while (!(current is null))
+            {
+                tmp = current.Previous;
+                current.Previous = current.Next;
+                current.Next = tmp;
+                current = current.Previous;
+
+            }
+            if (!(tmp is null))
+            {
+                _tail = GetDoubleNodeByIndex(0);
+                _head = tmp.Previous;
+                
+            }
+
+        }
+        public (int, int) MaxValue()
+        {
+            int indexOfMaxValue = 0;
+            DoubleLinkedNode current = _head;
+            DoubleLinkedNode maxValue = _head;
 
 
+            for (int i = 1; i < Length; i++)
+            {
+                if (maxValue.Value < current.Next.Value)
+                {
+                    maxValue = current.Next;
+                    indexOfMaxValue = i;
 
+                }
+                current = current.Next;
+            }
+            int maxV = maxValue.Value;
+            return (maxV, indexOfMaxValue);
+        }
+
+        public (int, int) MinValue()
+        {
+
+            DoubleLinkedNode current = _head;
+            DoubleLinkedNode minValue = _head;
+            int indexOfMinValue = 0;
+            int min = 0;
+
+            for (int i = 1; i < Length; i++)
+            {
+                if (minValue.Value > current.Next.Value)
+                {
+                    minValue = current.Next;
+                    indexOfMinValue = i;
+                    min = minValue.Value;
+
+                }
+                current = current.Next;
+
+            }
+
+            return (min, indexOfMinValue);
+        }
+
+        public int IndexOfMaxValue()
+        {
+            var result = MaxValue();
+            int index = result.Item2;
+            return index;
 
         }
 
+        public int IndexOfMinValue()
+        {
+            var result = MinValue();
+            int index = result.Item2;
+            return index;
+        }
+
+        public void SortAscending()
+        {
+            int tmp;
+            DoubleLinkedNode current;
+            DoubleLinkedNode next;
+            DoubleLinkedNode pre;
+            for (int i = 1; i < Length; i++)
+            {
+                current = _head;
+                next = current.Next;
+                pre = null;
+
+                for (int j = 0; j < Length - i; j++)
+                {
+                    if (current.Value > next.Value)
+                    {
+                        tmp = next.Value;
+                        next.Value = current.Value;
+                        current.Value = tmp;
+                    }
+
+                    pre = current;
+                    current = next;
+                    next = next.Next;
+
+                }
+            }
+
+        }
+        public void SortDescending()
+        {
+            int tmp;
+            DoubleLinkedNode current;
+            DoubleLinkedNode next;
+            DoubleLinkedNode pre;
+            for (int i = 1; i < Length; i++)
+            {
+                current = _head;
+                next = current.Next;
+                pre = null;
+
+                for (int j = 0; j < Length - i; j++)
+                {
+                    if (current.Value < next.Value)
+                    {
+                        tmp = current.Value;
+                        current.Value = next.Value;
+                        next.Value = tmp;
+                    }
+
+                    pre = current;
+                    current = next;
+                    next = next.Next;
+                }
+
+            }
+        }
+        public int RemoveByValueFisrt(int value)
+        {
+
+            int indexOfValue = FirstIndexByValue(value);
+            RemoveByIndex(indexOfValue);
+
+            return indexOfValue;
+        }
+        public int RemoveByValueAll(int value)
+        {
+            int count = 0;
+            int index;
+            for (int i = 1; i < Length; i++)
+            {
+
+                index = RemoveByValueFisrt(value);
+                if (index < Length)
+                {
+                    count++;
+                }
+
+            }
+            return count;
+        }
+
+        public void AddDoubleLinkedListByIndex(int index, DoubleLinkedList insertList)
+        {
+            CheckIndex(index);
+            DoubleLinkedList copyList = CopyList(insertList);
+            DoubleLinkedNode currentCopy = copyList._head;
+            DoubleLinkedNode tailCopy = copyList._tail;
+
+            DoubleLinkedNode preIndex = GetDoubleNodeByIndex(index - 1);
+            DoubleLinkedNode curIndex = GetDoubleNodeByIndex(index);
+
+
+            if (index == 0)
+            {
+                tailCopy.Next = this._head;
+                _head = currentCopy;
+            }
+            else
+            {
+                currentCopy.Previous = curIndex;
+                tailCopy.Next = curIndex;
+                curIndex.Next = currentCopy;
+            }
+
+            this.Length += copyList.Length;
+        }
+
+
+
+
+        private DoubleLinkedList CopyList(DoubleLinkedList list)
+        {
+            DoubleLinkedList copyList = new DoubleLinkedList();
+
+            for (int i = 0; i < list.Length; i++)
+            {
+                copyList.Add(list[i]);
+            }
+            return copyList;
+        }
         private DoubleLinkedNode GetDoubleNodeByIndex(int index)
         {
             DoubleLinkedNode current;
@@ -288,6 +477,25 @@ namespace List
                     return false;
                 }
             }
+
+            currentThis = _tail;
+            currentList = list._tail;
+
+            if (currentThis.Value != currentList.Value)
+            {
+                return false;
+            }
+
+            while (!(currentThis.Previous is null))
+            {
+                currentList = currentList.Previous;
+                currentThis = currentThis.Previous;
+                if (currentThis.Value != currentList.Value)
+                {
+                    return false;
+                }
+            }
+
 
             return true;
         }
