@@ -261,6 +261,18 @@ namespace List.Tests
             Assert.AreEqual(expected, actual);
         }
 
+        [TestCase(new int[] { 1,2,3,4}, new int[] { 5,6,7,8 }, new int[] { 1, 2, 3, 4, 5, 6, 7, 8 })]
+        public void AddLinkedListByEndTest(int[] array, int[] insertArray, int[] expectedArray)
+        {
+            LinkedList actual = new LinkedList(array);
+            LinkedList expected = new LinkedList(expectedArray);
+            LinkedList insert = new LinkedList(insertArray);
+
+            actual.AddLinkedListToEnd(insert);
+
+            Assert.AreEqual(expected, actual);
+        }
+
 
     }
 }

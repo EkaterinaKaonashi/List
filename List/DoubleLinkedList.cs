@@ -46,7 +46,8 @@ namespace List
 
         public DoubleLinkedList(int[] values)
         {
-           // нужна проверка , что входящий массив не нал
+            CheckArrayIsNotEmpty(values);
+            // нужна проверка , что входящий массив не нал
             _head = new DoubleLinkedNode(values[0]);
             _tail = _head;
 
@@ -133,9 +134,10 @@ namespace List
             _tail = current;
             current.Previous = preCur;
             Length-=xElements;
+            
 
             //проверка не пустой ли список
-           
+
         }
         public void RemoveFirstElement()
         {
@@ -389,13 +391,22 @@ namespace List
             }
             return count;
         }
+        public void AddDoubleLinkedListByFirstIndex(DoubleLinkedList insertList)
+        {
+            AddDoubleLinkedListByIndex(0, insertList);
+        }
+
+        public void AddDoubleLinkedListToEnd(DoubleLinkedList insertList)
+        {
+            AddDoubleLinkedListByIndex(Length-1, insertList);
+        }
 
         public void AddDoubleLinkedListByIndex(int index, DoubleLinkedList insertList)
         {
             CheckIndex(index);
-            DoubleLinkedList copyList = CopyList(insertList);
-            DoubleLinkedNode currentCopy = copyList._head;
-            DoubleLinkedNode tailCopy = copyList._tail;
+            DoubleLinkedList copyInsertList = CopyList(insertList);
+            DoubleLinkedNode currentCopy = copyInsertList._head;
+            DoubleLinkedNode tailCopy = copyInsertList._tail;
 
             DoubleLinkedNode preIndex = GetDoubleNodeByIndex(index - 1);
             DoubleLinkedNode curIndex = GetDoubleNodeByIndex(index);
@@ -403,17 +414,29 @@ namespace List
 
             if (index == 0)
             {
-                tailCopy.Next = this._head;
-                _head = currentCopy;
+                copyInsertList._tail.Next = curIndex;
+                curIndex.Previous = copyInsertList._tail;
+                _head = copyInsertList._head;
+                
+            }
+            else if(index == Length - 1)
+            {
+                curIndex.Next = currentCopy;
+                
+                currentCopy.Previous = curIndex;
+                _tail = copyInsertList._tail;
+
             }
             else
             {
-                currentCopy.Previous = curIndex;
-                tailCopy.Next = curIndex;
-                curIndex.Next = currentCopy;
+                preIndex.Next = copyInsertList._head;
+                copyInsertList._tail.Next = curIndex;
+                copyInsertList._head.Previous = preIndex;
+                curIndex.Previous = copyInsertList._tail;
+               
             }
 
-            this.Length += copyList.Length;
+            this.Length += copyInsertList.Length;
         }
 
 
@@ -529,6 +552,13 @@ namespace List
             if (index < 0 && index >= Length)
             {
                 throw new ArgumentOutOfRangeException();
+            }
+        }
+        private void CheckArrayIsNotEmpty(int[] array)
+        {
+            if (Length == 0)
+            {
+                throw new Exception("Array is empty");
             }
         }
     }

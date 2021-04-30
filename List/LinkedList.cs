@@ -470,5 +470,12 @@ namespace List
             }
             return copyList;
         }
+        private void CheckArrayIsNotEmpty()
+        {
+            if (Length == 0)
+            {
+                throw new Exception("Array is empty");
+            }
+        }
     }
 }
