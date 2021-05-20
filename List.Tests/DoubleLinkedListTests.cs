@@ -11,7 +11,7 @@ namespace List.Tests
         [TestCase(0, 5, new int[] { 1, 2, 3, 4, 5 }, new int[] { 5, 1, 2, 3, 4, 5 })]
         [TestCase(4, 5, new int[] { 1, 2, 3, 4, 5 }, new int[] { 1, 2, 3, 4, 5, 5 })]
         [TestCase(5, 6, new int[] { 1, 2, 3, 4, 5 }, new int[] { 1, 2, 3, 4, 5, 6 })]
-        //[TestCase(6, 6, new int[] { 1, 2, 3, 4, 5 }, new int[] { 1, 2, 3, 4, 5, 6 })] написать тесты негативные и исключение 
+       
 
         public void AddByIndexTest(int index, int value, int[] array, int[] expectedArray)
         {
