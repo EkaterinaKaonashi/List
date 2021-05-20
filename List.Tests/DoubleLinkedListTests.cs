@@ -232,7 +232,7 @@ namespace List.Tests
             int actualCount = actual.RemoveByValueAll(value);
 
             Assert.AreEqual(expected, actual);
-            //Assert.AreEqual(expectedCount, actualCount);
+           
 
         }
         [TestCase(new int[] { 5, 6, 7, 8 }, new int[] { 1, 2, 3, 4 }, new int[] { 1, 2, 3, 4, 5, 6, 7, 8 })]
@@ -251,6 +251,7 @@ namespace List.Tests
         [TestCase(2, new int[] { 1, 2, 3, 4 }, new int[] { 5, 6, 7, 8, 9, 10 }, new int[] { 1, 2, 5, 6, 7, 8, 9, 10, 3, 4 })]
         [TestCase(3, new int[] { 1, 2, 3, 4 }, new int[] { 5, 6, 7, 8, 9, 10 }, new int[] { 1, 2, 3, 5, 6, 7, 8, 9, 10, 4 })]
         [TestCase(3, new int[] { 1, 2, 3, 4, 5, 6, }, new int[] { 9, 9, 9 }, new int[] { 1, 2, 3, 9, 9, 9, 4, 5, 6, })]
+        [TestCase(2, new int[] { 0,0,0 }, new int[] { 9, 9, 9 }, new int[] { 0,0,9,9,9,0 })]
         public void AddDoubleLinkedListByIndexTest(int index, int[] array, int[] insertArray, int[] expectedArray)
         {
             DoubleLinkedList actual = new DoubleLinkedList(array);

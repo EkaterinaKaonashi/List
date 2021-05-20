@@ -13,13 +13,16 @@ namespace List
 
         public int this[int index]
         {
+            
             get
             {
+                CheckIndex(index);
                 Node current = GetNodeByIndex(index);
                 return current.Value;
             }
             set
             {
+                CheckIndex(index);
                 Node current = GetNodeByIndex(index);
                 current.Value = value;  
 
@@ -41,6 +44,7 @@ namespace List
 
         public LinkedList (int[] values)
         {
+            CheckArrayIsNotEmpty(values);
             Length = values.Length;
             _head = new Node(values[0]);
             _tail = _head;
@@ -120,8 +124,8 @@ namespace List
         public void RemoveByIndex(int index)
         {
             CheckIndex(index);
-            Node preIndex = GetNodeByIndex(index-1); // тут получаем индекс , который перед нужным
-            Node current = GetNodeByIndex(index);
+            Node preIndex = GetNodeByIndex(index-1);
+            Node current = preIndex.Next;
 
             preIndex.Next = current.Next;
             Length--;
@@ -358,7 +362,7 @@ namespace List
             AddLinkedListByIndex(0, insertList);
         }
 
-         public void AddLinkedListToEnd(LinkedList insertList)
+        public void AddLinkedListToEnd(LinkedList insertList)
         {
             AddLinkedListByIndex(Length, insertList);
         }
@@ -372,7 +376,7 @@ namespace List
             Node tailCopy = copyList._tail;
 
             Node preIndex = GetNodeByIndex(index - 1);
-            Node curIndex = GetNodeByIndex(index);
+            Node curIndex = preIndex.Next ;
 
 
             if (index == 0)
@@ -392,9 +396,14 @@ namespace List
         public override bool Equals(object obj)
         {
             LinkedList list = (LinkedList)obj;
+            
             if( this.Length != list.Length)
             {
                 return false;   
+            }
+            if((this is null && list is null)) 
+            {
+                return false;
             }
             Node currentThis = _head;
             Node currentList = list._head;
@@ -434,8 +443,7 @@ namespace List
 
         }
 
-       
-            private Node GetNodeByIndex(int index)
+        private Node GetNodeByIndex(int index)
         {
             Node current = _head;
             for (int i = 1; i <= index; i++)
@@ -463,16 +471,27 @@ namespace List
         private LinkedList CopyList(LinkedList list)
         {
             LinkedList copyList = new LinkedList();
+            Node insertCurrentNode = list._head;
 
-            for (int i = 0; i < list.Length; i++)
+            copyList._head = list._head;
+            Node current = copyList._head;
+            copyList.Length += list.Length;
+
+            
+            while (!(current == null))
             {
-                copyList.Add(list[i]);
+                current.Next = insertCurrentNode.Next;
+                copyList._tail = current;
+                current = current.Next;
+                insertCurrentNode = insertCurrentNode.Next;
+               
             }
             return copyList;
+
         }
-        private void CheckArrayIsNotEmpty()
+        private void CheckArrayIsNotEmpty(int[] values)
         {
-            if (Length == 0)
+            if (values.Length == 0)
             {
                 throw new Exception("Array is empty");
             }
